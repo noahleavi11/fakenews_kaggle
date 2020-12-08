@@ -1,6 +1,12 @@
 # import numpy as np
 # import string
-#import nltk
+# import nltk
+
+# Purpose of this code is to correctly predict whether an article is real news or fake news
+# for kaggle competition found at https://www.kaggle.com/c/fake-news/overview
+# I approached the task with a pipeline to easily convert long text articles to TFIDF matrix
+# and applied a grid search in order to find some better parameters for my model.
+
 import pandas as pd
 from sklearn.ensemble import AdaBoostClassifier
 from tempfile import mkdtemp
@@ -10,7 +16,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.metrics import classification_report
-#nltk.download('stopwords')
 from nltk.corpus import stopwords
 
 
@@ -36,8 +41,8 @@ param_grid = dict(classifier__n_estimators=[200, 250, 300],
 from shutil import rmtree
 rmtree(cachedir)
 cachedir = mkdtemp()
-# mygrid = GridSearchCV(SVC(), param_grid)
 
+# Create a pipeline to quickly cover manipulate data and fit model to it
 gridadapipe = Pipeline([
     ('bow', CountVectorizer(stop_words=stoplist, max_features=50000, ngram_range=(2,3))),  # strings to token integer counts
     ('tfidf', TfidfTransformer()),  # integer counts to weighted TF-IDF scores
